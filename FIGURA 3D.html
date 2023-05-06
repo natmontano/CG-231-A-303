@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>Titulo</title>
+        <style>
+            html, body { margin: 0; padding: 0; overflow: hidden; }
+            #text {
+                position: absolute;
+                padding: 10px;
+                width: 100%;
+                text-align: center;
+                color: #363636;
+            }
+        </style>
+	</head>
+	<body>
+		<div id="text">	DODACAEDRO<br/>
+            NATALIA MONTAÑO<br/>
+        </div>
+	</body>
+    </html>
+   
+  <script type="module">
+    import * as THREE from 'https://sebastiann16.github.io/CompG/three.module.js';
+    import { OrbitControls } from 'https://sebastiann16.github.io/CompG/OrbitControls.js';
+    var WIDTH = window.innerWidth;
+    var HEIGHT = window.innerHeight;
+
+/*Crear la escena 
+*/
+
+    var renderer = new THREE.WebGLRenderer({ antialias: true });
+    renderer.setSize(WIDTH, HEIGHT);
+    renderer.setClearColor(0xF5D2F9, 1);
+    document.body.appendChild(renderer.domElement);
+
+    var scene = new THREE.Scene();
+/*posicionar la cámara
+*/
+    var camera = new THREE.PerspectiveCamera(70, WIDTH / HEIGHT);
+    camera.position.z = 20;
+    camera.position.y = 5;
+    scene.add(camera);
+    const light = new THREE.AmbientLight(0x404040, 5);
+    scene.add(light);
+
+// Define los vértices del dodecaedro
+var phi=3.14;
+const vertices = [
+  [-1.0, -1.0, -1.0],
+  [-1.0, -1.0,  1.0],
+  [-1.0,  1.0, -1.0],
+  [-1.0,  1.0,  1.0],
+  [ 1.0, -1.0, -1.0],
+  [ 1.0, -1.0,  1.0],
+  [ 1.0,  1.0, -1.0],
+  [ 1.0,  1.0,  1.0],
+  [ 0.0, -1.0/phi, -phi],
+  [ 0.0, -1.0/phi,  phi],
+  [ 0.0,  1.0/phi, -phi],
+  [ 0.0,  1.0/phi,  phi],
+  [-1.0/phi, -phi, 0.0],
+  [-1.0/phi,  phi, 0.0],
+  [ 1.0/phi, -phi, 0.0],
+  [ 1.0/phi,  phi, 0.0],
+  [-phi, 0.0, -1.0/phi],
+  [-phi, 0.0,  1.0/phi],
+  [ phi, 0.0, -1.0/phi],
+  [ phi, 0.0,  1.0/phi]
+];
+
+
+// Crear las caras del dodecaedro
+const faces = [
+  [0,  1,  9, 16,  5],
+  [1,  0,  3, 18,  7],
+  [1,  7, 11, 10,  9],
+  [11,  7, 18, 19,  6],
+  [8, 17, 16,  9, 10],
+  [2, 14, 15,  6, 19],
+  [2,  3,  0,  5, 13],
+  [6, 15,  8, 10, 11],
+  [2, 19, 18,  3,  7],
+  [4, 16, 17,  5, 12],
+  [4, 12, 13,  0, 16],
+  [8, 15, 14, 17, 12]
+];
+
+// Crear la geometría del dodecaedro
+const geometry = new THREE.PolyhedronGeometry(vertices, faces);
+
+// Crear el material del dodecaedro
+const material = new THREE.MeshBasicMaterial({ color: 0xffffff });
+
+// Crear la malla del dodecaedro
+const dodecahedron = new THREE.Mesh(geometry, material);
+
+// Añadir la malla del dodecaedro a la escena
+scene.add(dodecahedron);
+
+
+//controlador de camara orbitcontrols
+    const controls = new OrbitControls(camera, renderer.domElement);
+    const axesHelper = new THREE.AxesHelper( 1000 ); //flechas del plano
+    scene.add(axesHelper);
+
+    const size = 1000;
+    const divisions = 1000;
+
+//añadir la malla
+   const gridHelper = new THREE.GridHelper( size, divisions );
+   scene.add(gridHelper);
+
+
+    function animate() {
+
+      requestAnimationFrame(animate);
+      controls.update();
+      renderer.render(scene, camera)
+    }
+    animate();
+  </script>
+</body>
+
+</html>
+<script>
